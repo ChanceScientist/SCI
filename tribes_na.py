@@ -13,7 +13,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 
-edgeFilename = Path(r'C:\Users\jerem\Downloads\soc-tribes\soc-tribes_cleaned.edges')
+edgeFilename = Path(r'C:\Users\jerem\SCI\soc-tribes_cleaned.edges')
 edges = np.loadtxt(edgeFilename,usecols=(0,1),dtype=int)
 
 G = nx.from_edgelist(edges)
@@ -80,6 +80,20 @@ plt.show()
 for node, value in degree.items():
     print(f"Node {node:02}: {value:.4f}")
 
+
+"""
+Average Path Length
+
+    The length of the shortest path between any two nodes in terms of number of edges.
+    
+Newman, M. (2018). Networks (2nd ed.). Oxford University Press. https://doi.org/10.1093/oso/9780198805090.001.0001
+"""
+if nx.is_connected(G):
+    avg_path_length = nx.average_shortest_path_length(G)
+    print(f"Average Path Length: {avg_path_length}")
+else:
+    print("The graph is not connected, so the average path length is undefined.")
+    
 """
 Assortative Mixing by Degree
 
