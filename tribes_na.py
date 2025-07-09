@@ -7,31 +7,40 @@ Read, K. E. (1954). Cultures of the Central Highlands, New Guinea. Southwestern 
 Rossi, R., & Ahmed, N. (2015). Tribes. Network Repository. https://networkrepository.com/soc-tribes.php
 """
 
-import numpy as np
-import networkx as nx
 from pathlib import Path
+import networkx as nx
 import matplotlib.pyplot as plt
+import numpy as np
 import matplotlib.colors as mcolors
 
-edgeFilename = Path(r'C:\Users\jerem\SCI\soc-tribes_cleaned.edges')
-edges = np.loadtxt(edgeFilename,usecols=(0,1),dtype=int)
+edgeFile = Path(r'C:\Users\jerem\OneDrive - Arizona State University\social capital infrastructure project\soc-tribes_directed.edges.txt')
 
-G = nx.from_edgelist(edges)
+G = nx.read_weighted_edgelist(edgeFile, nodetype=int, delimiter=" ")
+print(G)
+     
 directed_G = nx.DiGraph()
-directed_G.add_edges_from(edges)
+with open(edgeFile, 'r') as file:
+    for line in file:
+        source, target, weight = line.split()  
+        directed_G.add_edge(source, target, weight=float(weight))
+print(directed_G)
 
 pos_u = nx.shell_layout(G)
 pos_d = nx.shell_layout(directed_G)
+edge_labels_u = nx.get_edge_attributes(G, 'weight')
+edge_labels_d = nx.get_edge_attributes(directed_G, 'weight')
 
 fig = plt.figure(figsize=(12, 6))
 axgrid = fig.add_gridspec(6, 12)
 
 ax0 = fig.add_subplot(axgrid[: , :6 ])
-nx.draw(G, pos_u, with_labels=True, ax=ax0, node_size=400, font_size=12)
+nx.draw(G, pos_u, with_labels=True, width=[edge_labels_u[edge] for edge in G.edges], ax=ax0, node_size=400, font_size=12)
+nx.draw_networkx_edge_labels(G, pos_u, edge_labels=edge_labels_u, font_size=6, font_color='tab:purple')
 ax0.set_title("Connections of Gahuku–Gama Tribes - Undirected")
 
 ax1 = fig.add_subplot(axgrid[: , 6: ])
-nx.draw(directed_G, pos_d, with_labels=True, ax=ax1, node_size=400, font_size=12)
+nx.draw(directed_G, pos_d, with_labels=True, width=[edge_labels_d[edge] for edge in directed_G.edges], ax=ax1, node_size=400, font_size=12)
+nx.draw_networkx_edge_labels(directed_G, pos_d, edge_labels=edge_labels_d, font_size=6, font_color='tab:purple')
 ax1.set_title("Connections of Gahuku–Gama Tribes - Directed")
 
 fig.tight_layout()
