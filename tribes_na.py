@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.colors as mcolors
 
-edgeFile = Path(r'C:\Users\jerem\OneDrive - Arizona State University\social capital infrastructure project\soc-tribes_directed.edges.txt')
+edgeFile = Path(r'C:\Users\jerem\OneDrive - Arizona State University\social capital infrastructure project\soc-tribes_directed.edges')
 
 G = nx.read_weighted_edgelist(edgeFile, nodetype=int, delimiter=" ")
 print(G)
